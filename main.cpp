@@ -15,15 +15,13 @@ int main() {
   Student* bob = new Student((char*)"Bob", (char*)"Dob", 123, 1);
   Student* joe = new Student((char*)"Joe", (char*)"Dob", 121, 2);
   Student* kanye = new Student((char*)"Kanye", (char*)"Dob", 122, 2);
-
+  Student* rain = new Student((char*)"Rain", (char*)"Wong", 110, 0.3);
 
   add(head, head, head, bob);
   add(head, head, head, joe);
   add(head, head, head, kanye);
+  add(head, head, head, rain);
   print (head);
-  del(head, head, head, 123);
-  cout << "\n";
-  print(head);
 }
 
 //recursive function to add a node with a pointer to student to the linked list from lowest to highest id
