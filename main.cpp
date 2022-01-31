@@ -2,26 +2,74 @@
 #include "node.h"
 #include "student.h"
 #include <iomanip>
+#include <cstring>
 
 using namespace::std;
 
 void add(Node* &head, Node* previous, Node* current, Student *student);
 void print(Node* head);
 void del(Node* &head, Node* previous, Node* current, int id);
-float avgGpa(Node* head);
+void avgGpa(Node* head);
+int count(Node* head, int n);
+float total(Node* head, float avg);
 
 int main() {
   Node* head = NULL;
   Student* bob = new Student((char*)"Bob", (char*)"Dob", 123, 1);
   Student* joe = new Student((char*)"Joe", (char*)"Dob", 121, 2);
   Student* kanye = new Student((char*)"Kanye", (char*)"Dob", 122, 2);
-  Student* rain = new Student((char*)"Rain", (char*)"Wong", 110, 0.3);
+  Student* rain = new Student((char*)"Rain", (char*)"Wong", 121, 0.3);
 
   add(head, head, head, bob);
   add(head, head, head, joe);
   add(head, head, head, kanye);
   add(head, head, head, rain);
-  print (head);
+  
+  while(true) {
+    char input[80];
+    cout << "ADD, PRINT, DELETE, AVG, QUIT\n";
+    cin.getline(input, 80);
+    if (strcmp(input, "ADD")==0)
+    {
+      char first[80];
+      char last[80];
+      int id;
+      float gpa;
+      cout << "Enter first name: ";
+      cin.getline(first, 80);
+      cout << "Enter last name: ";
+      cin.getline(last, 80);
+      cout << "Enter id: ";
+      cin >> id;
+      cin.ignore();
+      cout << "Enter gpa: ";
+      cin >> gpa;
+      cin.ignore();
+
+      Student * a = new Student(first, last, id, gpa);
+      add(head, head, head, a);
+    }
+    else if (strcmp(input, "PRINT") == 0)
+    {
+      print(head);
+    }
+    else if (strcmp(input, "DELETE") == 0)
+    {
+      int id = 0;
+      cout << "Enter ID: ";
+      cin >> id;
+      cin.ignore();
+      del(head, head, head, id);
+    }
+    else if (strcmp(input, "AVG") == 0)
+    {
+      avgGpa(head);
+    }
+    else if (strcmp(input, "QUIT") == 0)
+    {
+        break;   
+    }
+  }
 }
 
 //recursive function to add a node with a pointer to student to the linked list from lowest to highest id
@@ -68,16 +116,18 @@ void print(Node* head)
   
 }
 
+//recursive function to delete
 void del(Node* &head, Node* previous, Node* current, int id)
 {
   if(head == NULL){
-
+    cout<<"List is empty\n";
   }
   else if(head->s->id == id)
   {
     Node* temp = head;
     head = head->next;
     delete temp;
+    del(head, head, head, id);
   }
   else if(current == NULL)
   {
@@ -87,10 +137,38 @@ void del(Node* &head, Node* previous, Node* current, int id)
   {
     previous->next = current->next;
     delete current;
+    del(head, previous, previous->next, id);
   }
   else if(current->s->id != id)
   {
     del(head, current, current->next, id);
   }
   
+}
+void avgGpa(Node* head)
+{
+  cout << fixed << setprecision(2) << total(head, 0)/count(head,0)<<endl;
+}
+
+float total(Node* head, float avg)
+{
+
+  if(head != NULL)
+  {
+    avg = avg + total(head->next, head->s->gpa);
+  }
+  return avg;
+
+}
+
+int count(Node* head, int n)
+{
+  if(head == NULL)
+  {
+    return n;
+  }
+  else
+  {
+    count(head->next, n+1);
+  }
 }
